@@ -42,4 +42,4 @@ Jump={
 
 [physics]
 
-2d/default_gravity_vector=Vector2(0, 4)
+2d/default_gravity_vector=Vector2(0, 3)
