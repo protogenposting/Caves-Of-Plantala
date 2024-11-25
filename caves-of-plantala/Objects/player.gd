@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -380.0
+const JUMP_VELOCITY = -300.0
 const ACCELERATION = 50
 const MAX_COYOTE_TIME = 5
 const JUMP_WINDOW = 7
