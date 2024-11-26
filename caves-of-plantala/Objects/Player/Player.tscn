@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3 uid="uid://iaqeiruks2ns"]
+
+[ext_resource type="Script" path="res://Objects/Player/player.gd" id="1_sxstv"]
+[ext_resource type="Texture2D" uid="uid://52biq8tcx0y" path="res://Objects/Player/PlayerSprites/PlayerIdle.png" id="2_msw2f"]
+
+[sub_resource type="Gradient" id="Gradient_sj3qk"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wskng"]
+size = Vector2(54, 60)
+
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
+script = ExtResource("1_sxstv")
+
+[node name="DashParticles" type="CPUParticles2D" parent="."]
+amount = 25
+texture = ExtResource("2_msw2f")
+spread = 180.0
+gravity = Vector2(0, 0)
+split_scale = true
+scale_curve_x = null
+scale_curve_y = null
+color = Color(1, 0.529412, 1, 1)
+color_ramp = SubResource("Gradient_sj3qk")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_msw2f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_wskng")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
+position_smoothing_enabled = true
+position_smoothing_speed = 15.0
+
+[node name="TorchParticles" type="CPUParticles2D" parent="."]
+position = Vector2(0, -30)
+amount = 100
+lifetime = 0.3
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 10.0
+scale_amount_max = 5.0
+color = Color(1, 0.529412, 1, 1)
+color_ramp = SubResource("Gradient_sj3qk")
