@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bodqfe86q1o30"]
+
+[ext_resource type="Script" path="res://Objects/enchanted_rock.gd" id="1_6aoea"]
+[ext_resource type="Texture2D" uid="uid://bsr0ekqlkdokt" path="res://Objects/Spikes/Spike.png" id="2_mkwl7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_acc4i"]
+size = Vector2(33, 33)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c5ou1"]
+size = Vector2(32, 32)
+
+[node name="EnchantedRock" type="Node2D"]
+script = ExtResource("1_6aoea")
+
+[node name="Body" type="AnimatableBody2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="Body"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/Area2D"]
+shape = SubResource("RectangleShape2D_acc4i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Body"]
+shape = SubResource("RectangleShape2D_c5ou1")
+
+[node name="Sprite2D" type="Sprite2D" parent="Body"]
+texture_filter = 1
+texture = ExtResource("2_mkwl7")
+
+[node name="EndPoint" type="Node2D" parent="."]
+
+[connection signal="area_entered" from="Body/Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="body_entered" from="Body/Area2D" to="." method="_on_area_2d_body_entered"]

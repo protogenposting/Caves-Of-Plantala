@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://iaqeiruks2ns"]
+[gd_scene load_steps=6 format=3 uid="uid://iaqeiruks2ns"]
 
 [ext_resource type="Script" path="res://Objects/Player/player.gd" id="1_sxstv"]
 [ext_resource type="Texture2D" uid="uid://52biq8tcx0y" path="res://Objects/Player/PlayerSprites/PlayerIdle.png" id="2_msw2f"]
@@ -8,6 +8,9 @@ colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wskng"]
 size = Vector2(54, 60)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xw74y"]
+size = Vector2(54, 9)
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 script = ExtResource("1_sxstv")
@@ -30,6 +33,12 @@ texture = ExtResource("2_msw2f")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_wskng")
 
+[node name="Hurtbox" type="Area2D" parent="." groups=["Player"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, 25.5)
+shape = SubResource("RectangleShape2D_xw74y")
+
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
@@ -46,3 +55,18 @@ initial_velocity_max = 10.0
 scale_amount_max = 5.0
 color = Color(1, 0.529412, 1, 1)
 color_ramp = SubResource("Gradient_sj3qk")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Speed" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = -354.0
+offset_top = -203.0
+offset_right = -314.0
+offset_bottom = -180.0
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

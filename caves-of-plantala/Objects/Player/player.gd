@@ -28,6 +28,12 @@ var colorTime : int = 0
 
 var facing : int = 1
 
+var startPosition : Vector2
+
+func _ready() -> void:
+	startPosition.x = position.x
+	startPosition.y = position.y
+
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if not is_on_floor():
@@ -50,6 +56,8 @@ func _physics_process(delta: float) -> void:
 			canDash = true
 	
 	if InputBuffer.is_action_press_buffered("Jump") && coyoteTime > 0:
+		velocity += get_platform_velocity()
+		
 		jumpTime = JUMP_WINDOW
 		coyoteTime = 0
 		
@@ -61,7 +69,7 @@ func _physics_process(delta: float) -> void:
 				velocity.y /= 2
 	
 	if InputBuffer.is_action_press_buffered("Dash") && canDash && dashTimeLeft <= 0:
-		freeze(0.07)
+		#freeze(0.07)
 		var moveVector = get_move_axis()
 		
 		dashTimeLeft = MAX_DASH_TIME
@@ -116,7 +124,7 @@ func _physics_process(delta: float) -> void:
 	
 	if !is_on_floor():
 		accel = AIR_ACCELERATION
-		if abs(velocity.x) > DASH_SPEED:
+		if abs(velocity.x) > DASH_SPEED && sign(velocity.x) == sign(direction):
 			accel = FAST_AIR_ACCELERATION
 	
 	if direction && dashTimeLeft <= 0:
@@ -129,7 +137,11 @@ func _physics_process(delta: float) -> void:
 	
 	$DashParticles.emitting = dashTimeLeft > 0
 	
+	$Control/Speed.text = "Speed: "+str(velocity.x)
+	
 	$Sprite.scale.x = facing
+	
+	print(get_real_velocity())
 
 	move_and_slide()
 
@@ -147,6 +159,18 @@ func get_move_axis() -> Vector2:
 	
 	return moveVector.normalized()
 
-func angle_difference(angle1, angle2):
+func angle_difference(angle1, angle2) -> float:
 	var diff = angle2 - angle1
 	return diff if abs(diff) < 180 else diff + (360 * -sign(diff))
+
+func die():
+	position = startPosition
+
+
+func _on_hurtbox_area_entered(area: Area2D) -> void:
+	if area.is_in_group("Kill"):
+		die()
+		velocity = Vector2(0,0)
+		canDash = false
+		coyoteTime
+	pass # Replace with function body.

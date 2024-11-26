@@ -9,7 +9,7 @@ size = Vector2(32, 8)
 [node name="Spikes" type="Node2D"]
 script = ExtResource("1_fpvi4")
 
-[node name="Collision" type="Area2D" parent="."]
+[node name="Collision" type="Area2D" parent="." groups=["Kill"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Collision"]
 texture_filter = 1

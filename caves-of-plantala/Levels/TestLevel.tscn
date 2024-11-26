@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=4 uid="uid://dsww3dyu0fbkt"]
+[gd_scene load_steps=5 format=4 uid="uid://dsww3dyu0fbkt"]
 
 [ext_resource type="TileSet" uid="uid://ckavhruf6n7nh" path="res://Tilesets/TilesetTest.tres" id="1_12p44"]
 [ext_resource type="PackedScene" uid="uid://dudj4spsqtfhg" path="res://Objects/Player/PlayerSpawnPoint.tscn" id="2_qjew2"]
 [ext_resource type="PackedScene" uid="uid://bgu0vbdjb7me4" path="res://Objects/Spikes/Spikes.tscn" id="3_p32ni"]
+[ext_resource type="PackedScene" uid="uid://bodqfe86q1o30" path="res://Objects/Enchanted Rock.tscn" id="4_nlfrv"]
 
 [node name="Main" type="Node2D"]
 
@@ -11,10 +12,18 @@ tile_map_data = PackedByteArray("AAADAAgABQAKAAAAAAAEAAgABQAKAAAAAAAFAAgABQAKAAA
 tile_set = ExtResource("1_12p44")
 
 [node name="PlayerSpawnPoint" parent="." instance=ExtResource("2_qjew2")]
-position = Vector2(324, 66)
+position = Vector2(352, 128)
 
 [node name="Spikes" type="Node" parent="."]
 
 [node name="Spikes" parent="Spikes" instance=ExtResource("3_p32ni")]
 position = Vector2(912, 240)
 scale = Vector2(5, 1)
+
+[node name="Spikes2" parent="Spikes" instance=ExtResource("3_p32ni")]
+position = Vector2(-1840, 304)
+scale = Vector2(30, 1)
+
+[node name="EnchantedRock" parent="." instance=ExtResource("4_nlfrv")]
+position = Vector2(-160, 192)
+endPointPos = Vector2(256, 0)

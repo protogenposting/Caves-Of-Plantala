@@ -21,6 +21,7 @@ InputBuffer="*res://input_buffer.gd"
 [global_group]
 
 Player=""
+Kill=""
 
 [input]
 
