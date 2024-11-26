@@ -69,4 +69,10 @@ offset_top = -203.0
 offset_right = -314.0
 offset_bottom = -180.0
 
+[node name="RightWall" type="RayCast2D" parent="."]
+target_position = Vector2(32, 0)
+
+[node name="LeftWall" type="RayCast2D" parent="."]
+target_position = Vector2(-32, 0)
+
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]

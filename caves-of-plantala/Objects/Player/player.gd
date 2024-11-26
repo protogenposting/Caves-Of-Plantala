@@ -20,6 +20,8 @@ var jumpTime : int= 0
 
 var dashTimeLeft : int = 0
 
+var jumpButtonTimer : int = 0
+
 var canDash : bool = false
 
 var dashVector : Vector2= Vector2(0,0)
@@ -36,6 +38,10 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	# Add the gravity.
+	
+	if Input.is_action_just_pressed("Jump"):
+		jumpButtonTimer = 5
+	
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 		if velocity.y > MAX_FALL_SPEED:
@@ -47,6 +53,8 @@ func _physics_process(delta: float) -> void:
 	
 	colorTime -= delta * 60
 	
+	jumpButtonTimer -= delta * 60
+	
 	# Handle jump.
 	if is_on_floor():
 		coyoteTime = MAX_COYOTE_TIME
@@ -54,10 +62,24 @@ func _physics_process(delta: float) -> void:
 		if dashTimeLeft < MAX_DASH_TIME/2 && !canDash:
 			colorTime = 10
 			canDash = true
+			
+			
 	
-	if InputBuffer.is_action_press_buffered("Jump") && coyoteTime > 0:
+	var wallDirection = int($RightWall.is_colliding()) - int($LeftWall.is_colliding())
+	
+	if wallDirection != 0 && !is_on_floor():
+		print(wallDirection)
+		if jumpButtonTimer > 0:
+			velocity.x = -wallDirection * SPEED
+			jumpTime = JUMP_WINDOW
+			jumpButtonTimer = 0
+		if velocity.y > MAX_FALL_SPEED/2:
+			velocity.y = MAX_FALL_SPEED/2
+	
+	if jumpButtonTimer > 0 && coyoteTime > 0:
 		jumpTime = JUMP_WINDOW
 		coyoteTime = 0
+		jumpButtonTimer = 0
 		
 		if dashTimeLeft > 0:
 			dashTimeLeft = 0
@@ -66,7 +88,7 @@ func _physics_process(delta: float) -> void:
 				velocity.x = DASH_SPEED * 1.5 * sign(velocity.x)
 				velocity.y /= 2
 		
-		velocity += get_platform_velocity()
+		velocity += get_platform_velocity()/2
 	
 	if InputBuffer.is_action_press_buffered("Dash") && canDash && dashTimeLeft <= 0:
 		var moveVector = get_move_axis()
@@ -75,11 +97,7 @@ func _physics_process(delta: float) -> void:
 		
 		dashVector = moveVector * DASH_SPEED
 		
-		print(dashVector.x)
-		
 		dashVector.x = max(abs(moveVector.x * DASH_SPEED),abs(velocity.x) + 20) * sign(moveVector.x)
-		
-		print(dashVector.x)
 		
 		jumpTime = 0
 		
@@ -118,12 +136,12 @@ func _physics_process(delta: float) -> void:
 	
 	var accel = ACCELERATION
 	
-	if abs(velocity.x) > DASH_SPEED:
+	if abs(velocity.x) >= DASH_SPEED * 0.9  && sign(velocity.x) == sign(direction):
 		accel = FAST_ACCELERATION
 	
 	if !is_on_floor():
 		accel = AIR_ACCELERATION
-		if abs(velocity.x) > DASH_SPEED && sign(velocity.x) == sign(direction):
+		if abs(velocity.x) > DASH_SPEED * 0.9 && sign(velocity.x) == sign(direction):
 			accel = FAST_AIR_ACCELERATION
 	
 	if direction && dashTimeLeft <= 0:
@@ -141,8 +159,6 @@ func _physics_process(delta: float) -> void:
 	$Control/Speed.text = "Speed: "+str(velocity.x)
 	
 	$Sprite.scale.x = facing
-	
-	print(get_real_velocity())
 
 	move_and_slide()
 
