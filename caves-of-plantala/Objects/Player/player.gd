@@ -56,8 +56,6 @@ func _physics_process(delta: float) -> void:
 			canDash = true
 	
 	if InputBuffer.is_action_press_buffered("Jump") && coyoteTime > 0:
-		velocity += get_platform_velocity()
-		
 		jumpTime = JUMP_WINDOW
 		coyoteTime = 0
 		
@@ -67,6 +65,8 @@ func _physics_process(delta: float) -> void:
 			if dashVector.y > 0:
 				velocity.x = DASH_SPEED * 1.5 * sign(velocity.x)
 				velocity.y /= 2
+		
+		velocity += get_platform_velocity()
 	
 	if InputBuffer.is_action_press_buffered("Dash") && canDash && dashTimeLeft <= 0:
 		var moveVector = get_move_axis()
@@ -135,6 +135,8 @@ func _physics_process(delta: float) -> void:
 	$TorchParticles.emitting = canDash
 	
 	$DashParticles.emitting = dashTimeLeft > 0
+	
+	$DashParticles.scale.x = facing
 	
 	$Control/Speed.text = "Speed: "+str(velocity.x)
 	
