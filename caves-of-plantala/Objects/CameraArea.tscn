@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3ecy5pwgtq8g"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wjow"]
+size = Vector2(32, 32)
+
+[node name="CameraArea" type="Area2D" groups=["CameraArea"]]
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_0wjow")

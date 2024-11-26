@@ -6,6 +6,8 @@ func _ready() -> void:
 	var player = load("res://Objects/Player/Player.tscn").instantiate()
 	
 	add_child(player)
+	
+	$Sprite2D.visible = false
 	pass # Replace with function body.
 
 

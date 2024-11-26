@@ -6,7 +6,7 @@ const JUMP_VELOCITY = -300.0
 const ACCELERATION = 50
 const FAST_ACCELERATION = 15
 const AIR_ACCELERATION = 25
-const FAST_AIR_ACCELERATION = 2
+const FAST_AIR_ACCELERATION = 4
 const MAX_COYOTE_TIME = 5
 const JUMP_WINDOW = 7
 const MAX_FALL_SPEED = 1000
@@ -32,12 +32,14 @@ var facing : int = 1
 
 var startPosition : Vector2
 
+var canUltra : bool = false
+
 func _ready() -> void:
 	startPosition.x = position.x
 	startPosition.y = position.y
 
 func _physics_process(delta: float) -> void:
-	# Add the gravity.
+	var direction := Input.get_axis("Left", "Right")
 	
 	if Input.is_action_just_pressed("Jump"):
 		jumpButtonTimer = 5
@@ -47,6 +49,33 @@ func _physics_process(delta: float) -> void:
 		if velocity.y > MAX_FALL_SPEED:
 			velocity.y = MAX_FALL_SPEED
 	
+	var cameraAreas = $Hurtbox.get_overlapping_areas()
+	
+	var touching : Area2D = null
+	
+	for i in cameraAreas:
+		if i.is_in_group("CameraArea"):
+			touching = i
+			break
+	
+	if touching != null:
+		var cameraCollision : CollisionShape2D = touching.get_node("Shape")
+		
+		var cameraShape : RectangleShape2D = cameraCollision.shape
+		
+		$Camera2D.limit_left = touching.position.x - touching.scale.x * cameraShape.size.x / 2
+		
+		$Camera2D.limit_right = touching.position.x + touching.scale.x * cameraShape.size.x / 2
+		
+		$Camera2D.limit_top = touching.position.y - touching.scale.y * cameraShape.size.y / 2
+		
+		$Camera2D.limit_bottom = touching.position.y + touching.scale.y * cameraShape.size.y / 2
+	else:
+		$Camera2D.limit_left = -10000000
+		$Camera2D.limit_top = -10000000
+		$Camera2D.limit_right = 10000000
+		$Camera2D.limit_bottom = 10000000
+	
 	coyoteTime -= delta * 60
 	
 	jumpTime -= delta * 60
@@ -55,6 +84,21 @@ func _physics_process(delta: float) -> void:
 	
 	jumpButtonTimer -= delta * 60
 	
+	var wallDirection = int($RightWall.is_colliding()) - int($LeftWall.is_colliding())
+	
+	if wallDirection != 0 && !is_on_floor():
+		if jumpButtonTimer > 0:
+			if direction != 0:
+				velocity.x = -wallDirection * SPEED * 2
+			else:
+				velocity.x = -wallDirection * SPEED * 1.25
+			jumpTime = JUMP_WINDOW
+			jumpButtonTimer = 0
+			if dashTimeLeft > 0 && dashVector.x == 0 && dashVector.y < 0:
+				jumpTime = 0
+				velocity.y = JUMP_VELOCITY*3
+				dashTimeLeft = 0
+	
 	# Handle jump.
 	if is_on_floor():
 		coyoteTime = MAX_COYOTE_TIME
@@ -62,24 +106,17 @@ func _physics_process(delta: float) -> void:
 		if dashTimeLeft < MAX_DASH_TIME/2 && !canDash:
 			colorTime = 10
 			canDash = true
-			
-			
 	
-	var wallDirection = int($RightWall.is_colliding()) - int($LeftWall.is_colliding())
-	
-	if wallDirection != 0 && !is_on_floor():
-		print(wallDirection)
-		if jumpButtonTimer > 0:
-			velocity.x = -wallDirection * SPEED
-			jumpTime = JUMP_WINDOW
-			jumpButtonTimer = 0
-		if velocity.y > MAX_FALL_SPEED/2:
-			velocity.y = MAX_FALL_SPEED/2
 	
 	if jumpButtonTimer > 0 && coyoteTime > 0:
 		jumpTime = JUMP_WINDOW
 		coyoteTime = 0
 		jumpButtonTimer = 0
+		
+		if canUltra:
+			velocity.x *= 1.2
+			print("ultra!")
+			canUltra = false
 		
 		if dashTimeLeft > 0:
 			dashTimeLeft = 0
@@ -125,14 +162,13 @@ func _physics_process(delta: float) -> void:
 			if velocity.y <= 0 || is_on_floor():
 				velocity.x = DASH_SPEED * 0.8 * dashVector.normalized().x
 				velocity.y = DASH_SPEED * 0.8 * dashVector.normalized().y
+			else:
+				canUltra = true
 	
 	if jumpTime > 0:
 		velocity.y = JUMP_VELOCITY
 		if Input.is_action_just_released("Jump"):
 			jumpTime = 0
-	
-	# movement
-	var direction := Input.get_axis("Left", "Right")
 	
 	var accel = ACCELERATION
 	
@@ -143,6 +179,8 @@ func _physics_process(delta: float) -> void:
 		accel = AIR_ACCELERATION
 		if abs(velocity.x) > DASH_SPEED * 0.9 && sign(velocity.x) == sign(direction):
 			accel = FAST_AIR_ACCELERATION
+	elif abs(velocity.x) < DASH_SPEED * 0.9:
+		canUltra = false
 	
 	if direction && dashTimeLeft <= 0:
 		facing = sign(direction)
@@ -182,6 +220,10 @@ func angle_difference(angle1, angle2) -> float:
 
 func die():
 	position = startPosition
+	canUltra = false
+	canDash = false
+	dashTimeLeft = 0
+	jumpTime = 0
 
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:

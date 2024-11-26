@@ -22,6 +22,7 @@ InputBuffer="*res://input_buffer.gd"
 
 Player=""
 Kill=""
+CameraArea=""
 
 [input]
 

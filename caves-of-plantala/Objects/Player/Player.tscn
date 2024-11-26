@@ -41,6 +41,7 @@ shape = SubResource("RectangleShape2D_xw74y")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(1.5, 1.5)
+limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 15.0
 
@@ -70,9 +71,11 @@ offset_right = -314.0
 offset_bottom = -180.0
 
 [node name="RightWall" type="RayCast2D" parent="."]
+position = Vector2(0, 27)
 target_position = Vector2(32, 0)
 
 [node name="LeftWall" type="RayCast2D" parent="."]
+position = Vector2(0, 27)
 target_position = Vector2(-32, 0)
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
