@@ -5,10 +5,7 @@ extends Node2D
 func _ready() -> void:
 	$Sprite2D.region_rect.size *= transform.get_scale()
 	
-	$Collision.scale = transform.get_scale()
-	
-	scale.x = 1
-	scale.y = 1
+	$Sprite2D.global_scale = Vector2(1,1)
 	
 	pass # Replace with function body.
 

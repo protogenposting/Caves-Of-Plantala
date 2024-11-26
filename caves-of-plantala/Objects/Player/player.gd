@@ -13,6 +13,7 @@ const MAX_FALL_SPEED = 1000
 const MAX_DASH_TIME = 20
 const DASH_TURN_SPEED = 3
 const DASH_SPEED = 500
+const MAX_STAMINA = 100
 
 var coyoteTime : int = 0
 
@@ -34,6 +35,12 @@ var startPosition : Vector2
 
 var canUltra : bool = false
 
+var climbedLastFrame : bool = false
+
+var lastWall : int = 0
+
+var stamina = 0
+
 func _ready() -> void:
 	startPosition.x = position.x
 	startPosition.y = position.y
@@ -45,6 +52,9 @@ func _physics_process(delta: float) -> void:
 		jumpButtonTimer = 5
 	
 	if not is_on_floor():
+		if climbedLastFrame:
+			velocity.x = lastWall * SPEED
+			climbedLastFrame = false
 		velocity += get_gravity() * delta
 		if velocity.y > MAX_FALL_SPEED:
 			velocity.y = MAX_FALL_SPEED
@@ -86,21 +96,41 @@ func _physics_process(delta: float) -> void:
 	
 	var wallDirection = int($RightWall.is_colliding()) - int($LeftWall.is_colliding())
 	
+	climbedLastFrame = false
+	
 	if wallDirection != 0 && !is_on_floor():
-		if jumpButtonTimer > 0:
-			if direction != 0:
-				velocity.x = -wallDirection * SPEED * 2
-			else:
-				velocity.x = -wallDirection * SPEED * 1.25
-			jumpTime = JUMP_WINDOW
-			jumpButtonTimer = 0
-			if dashTimeLeft > 0 && dashVector.x == 0 && dashVector.y < 0:
-				jumpTime = 0
-				velocity.y = JUMP_VELOCITY*3
-				dashTimeLeft = 0
+		if Input.is_action_pressed("Grab") && stamina > 0 && jumpTime <= 0:
+			velocity.y = 0
+			
+			stamina -= delta * 10
+			
+			if Input.is_action_pressed("Up"):
+				velocity.y = JUMP_VELOCITY/4
+				stamina -= delta * 10
+				climbedLastFrame = true
+				lastWall = wallDirection
+			if Input.is_action_pressed("Down"):
+				velocity.y = MAX_FALL_SPEED/10
+			if jumpButtonTimer > 0:
+				jumpTime = JUMP_WINDOW
+				jumpButtonTimer = 0
+				stamina -= 30
+		else:
+			if jumpButtonTimer > 0:
+				if direction != 0:
+					velocity.x = -wallDirection * SPEED * 2
+				else:
+					velocity.x = -wallDirection * SPEED * 1.25
+				jumpTime = JUMP_WINDOW
+				jumpButtonTimer = 0
+				if dashTimeLeft > 0 && dashVector.x == 0 && dashVector.y < 0:
+					jumpTime = 0
+					velocity.y = JUMP_VELOCITY*3
+					dashTimeLeft = 0
 	
 	# Handle jump.
 	if is_on_floor():
+		stamina = MAX_STAMINA
 		coyoteTime = MAX_COYOTE_TIME
 		
 		if dashTimeLeft < MAX_DASH_TIME/2 && !canDash:
@@ -197,6 +227,13 @@ func _physics_process(delta: float) -> void:
 	$Control/Speed.text = "Speed: "+str(velocity.x)
 	
 	$Sprite.scale.x = facing
+	
+	if stamina < MAX_STAMINA:
+		$StaminaRect.size.x = 54 * (stamina/MAX_STAMINA)
+		
+		$StaminaRect.visible = true
+	else:
+		$StaminaRect.visible = false
 
 	move_and_slide()
 
@@ -219,6 +256,7 @@ func angle_difference(angle1, angle2) -> float:
 	return diff if abs(diff) < 180 else diff + (360 * -sign(diff))
 
 func die():
+	stamina = 0
 	position = startPosition
 	canUltra = false
 	canDash = false
