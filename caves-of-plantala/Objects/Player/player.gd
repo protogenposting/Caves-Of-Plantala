@@ -69,7 +69,6 @@ func _physics_process(delta: float) -> void:
 				velocity.y /= 2
 	
 	if InputBuffer.is_action_press_buffered("Dash") && canDash && dashTimeLeft <= 0:
-		#freeze(0.07)
 		var moveVector = get_move_axis()
 		
 		dashTimeLeft = MAX_DASH_TIME
