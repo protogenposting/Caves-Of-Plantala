@@ -52,9 +52,10 @@ func _physics_process(delta: float) -> void:
 		jumpButtonTimer = 5
 	
 	if not is_on_floor():
-		if climbedLastFrame:
+		'''if climbedLastFrame:
 			velocity.x = lastWall * SPEED
 			climbedLastFrame = false
+			velocity.y = JUMP_VELOCITY'''
 		velocity += get_gravity() * delta
 		if velocity.y > MAX_FALL_SPEED:
 			velocity.y = MAX_FALL_SPEED
@@ -81,6 +82,7 @@ func _physics_process(delta: float) -> void:
 		
 		$Camera2D.limit_bottom = touching.position.y + touching.scale.y * cameraShape.size.y / 2
 	else:
+		die()
 		$Camera2D.limit_left = -10000000
 		$Camera2D.limit_top = -10000000
 		$Camera2D.limit_right = 10000000
@@ -224,8 +226,6 @@ func _physics_process(delta: float) -> void:
 	
 	$DashParticles.scale.x = facing
 	
-	$Control/Speed.text = "Speed: "+str(velocity.x)
-	
 	$Sprite.scale.x = facing
 	
 	if stamina < MAX_STAMINA:
@@ -234,7 +234,7 @@ func _physics_process(delta: float) -> void:
 		$StaminaRect.visible = true
 	else:
 		$StaminaRect.visible = false
-
+	
 	move_and_slide()
 
 func freeze(time):
@@ -270,4 +270,6 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 		velocity = Vector2(0,0)
 		canDash = false
 		coyoteTime
+	if area.is_in_group("CameraArea"):
+		startPosition = position
 	pass # Replace with function body.
