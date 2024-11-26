@@ -7,7 +7,7 @@
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wskng"]
-size = Vector2(54, 60)
+size = Vector2(54, 48)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xw74y"]
 size = Vector2(54, 9)
@@ -31,9 +31,11 @@ texture_filter = 1
 texture = ExtResource("2_msw2f")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_wskng")
 
 [node name="Hurtbox" type="Area2D" parent="." groups=["Player"]]
+position = Vector2(0, -3)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 position = Vector2(0, 25.5)
@@ -71,11 +73,11 @@ offset_right = -314.0
 offset_bottom = -180.0
 
 [node name="RightWall" type="RayCast2D" parent="."]
-position = Vector2(0, 27)
+position = Vector2(0, 26)
 target_position = Vector2(32, 0)
 
 [node name="LeftWall" type="RayCast2D" parent="."]
-position = Vector2(0, 27)
+position = Vector2(0, 26)
 target_position = Vector2(-32, 0)
 
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
