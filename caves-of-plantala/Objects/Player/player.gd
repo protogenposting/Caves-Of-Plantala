@@ -127,7 +127,7 @@ func _physics_process(delta: float) -> void:
 
 	$TorchParticles.emitting = canDash
 	
-	$DashParticles.sca
+	$DashParticles.emitting = dashTimeLeft > 0
 	
 	$Sprite.scale.x = facing
 
