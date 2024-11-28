@@ -27,6 +27,7 @@ window/stretch/mode="viewport"
 Player=""
 Kill=""
 CameraArea=""
+Shroom=""
 
 [input]
 

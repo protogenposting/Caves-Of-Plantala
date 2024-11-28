@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://cekx6mib7jrcl"]
+
+[ext_resource type="Texture2D" uid="uid://bw3btvwlg42hf" path="res://Objects/Shroom/Sprite.png" id="1_k0jkh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3njn1"]
+radius = 15.1327
+
+[node name="BounceShroom" type="Node2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+z_index = -10
+texture_filter = 1
+texture = ExtResource("1_k0jkh")
+
+[node name="Area2D" type="Area2D" parent="." groups=["Shroom"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0, -3)
+shape = SubResource("CircleShape2D_3njn1")

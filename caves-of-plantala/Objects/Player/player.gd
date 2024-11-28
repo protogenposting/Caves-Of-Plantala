@@ -262,14 +262,20 @@ func die():
 	canDash = false
 	dashTimeLeft = 0
 	jumpTime = 0
+	velocity = Vector2(0,0)
+	canDash = false
+	coyoteTime = 0
 
 
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Kill"):
 		die()
-		velocity = Vector2(0,0)
-		canDash = false
-		coyoteTime
 	if area.is_in_group("CameraArea"):
 		startPosition = position
+	if area.is_in_group("Shroom"):
+		canDash = true
+		if dashTimeLeft > 0:
+			dashVector *= -2
+		else:
+			velocity.y = JUMP_VELOCITY * 3
 	pass # Replace with function body.
