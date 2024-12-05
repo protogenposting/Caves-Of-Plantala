@@ -12,4 +12,11 @@ grow_vertical = 2
 
 [node name="Button" parent="." instance=ExtResource("1_te84b")]
 layout_mode = 1
-levelName = "Chapter 1"
+levelName = "Chapter1"
+
+[node name="Button2" parent="." instance=ExtResource("1_te84b")]
+layout_mode = 1
+offset_top = 319.848
+offset_bottom = 447.848
+text = "Insanely Hard Test"
+levelName = "Test"

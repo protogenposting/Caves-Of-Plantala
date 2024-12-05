@@ -42,8 +42,8 @@ var lastWall : int = 0
 var stamina = 0
 
 func _ready() -> void:
-	startPosition.x = position.x
-	startPosition.y = position.y
+	startPosition.x = global_position.x
+	startPosition.y = global_position.y
 
 func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("Left", "Right")
@@ -270,7 +270,7 @@ func die():
 func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Kill"):
 		die()
-	if area.is_in_group("CameraArea"):
+	if area.is_in_group("CameraArea") && area.spawn != area:
 		startPosition = area.spawn.global_position
 	if area.is_in_group("Shroom"):
 		canDash = true
