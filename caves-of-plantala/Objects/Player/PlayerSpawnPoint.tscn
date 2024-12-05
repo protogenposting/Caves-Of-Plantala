@@ -1,10 +1,18 @@
-[gd_scene load_steps=3 format=3 uid="uid://dudj4spsqtfhg"]
+[gd_scene load_steps=4 format=3 uid="uid://dudj4spsqtfhg"]
 
 [ext_resource type="Script" path="res://Objects/Player/PlayerSpawnPoint.gd" id="1_gv1rp"]
 [ext_resource type="Texture2D" uid="uid://52biq8tcx0y" path="res://Objects/Player/PlayerSprites/PlayerIdle.png" id="2_t66qx"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lj33j"]
+radius = 1.0
 
 [node name="PlayerSpawnPoint" type="Node2D"]
 script = ExtResource("1_gv1rp")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_t66qx")
+
+[node name="Area2D" type="Area2D" parent="." groups=["SpawnPoint"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" groups=["SpawnPoint"]]
+shape = SubResource("CircleShape2D_lj33j")

@@ -257,7 +257,7 @@ func angle_difference(angle1, angle2) -> float:
 
 func die():
 	stamina = 0
-	position = startPosition
+	global_position = startPosition
 	canUltra = false
 	canDash = false
 	dashTimeLeft = 0
@@ -271,7 +271,7 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("Kill"):
 		die()
 	if area.is_in_group("CameraArea"):
-		startPosition = position
+		startPosition = area.spawn.global_position
 	if area.is_in_group("Shroom"):
 		canDash = true
 		if dashTimeLeft > 0:

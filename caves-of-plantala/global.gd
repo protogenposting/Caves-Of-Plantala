@@ -1,16 +1,9 @@
-extends Node2D
+extends Node
 
+@export var playerHasBeenSpawned = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if !Global.playerHasBeenSpawned:
-		var player = load("res://Objects/Player/Player.tscn").instantiate()
-		
-		add_child(player)
-	
-	Global.playerHasBeenSpawned = true
-	
-	$Sprite2D.visible = false
 	pass # Replace with function body.
 
 
