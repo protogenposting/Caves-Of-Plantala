@@ -157,7 +157,7 @@ func _physics_process(delta: float) -> void:
 				velocity.x = DASH_SPEED * 1.5 * sign(velocity.x)
 				velocity.y /= 2
 		
-		velocity += get_platform_velocity()/2
+		velocity += get_platform_velocity()/4
 	
 	if Input.is_action_just_pressed("Dash") && canDash && dashTimeLeft <= 0:
 		var moveVector = get_move_axis()
